@@ -130,17 +130,50 @@ refreshBtn.addEventListener("click", async () => {
         await fetch("/api/refresh", { method: "POST", cache: "no-store" });
         await loadHistory(currentRange);
         await loadStatus();
+        await loadMarketData();
     } finally {
         refreshBtn.disabled = false;
         refreshBtn.textContent = "Refresh now";
     }
 });
 
-loadHistory(currentRange).catch(err => {
-    console.error(err);
-    latestDateEl.textContent = "Could not load chart data.";
-});
 
+
+function formatMoney(value, decimals = 0) {
+    return "$" + Number(value || 0).toLocaleString(undefined, {
+        minimumFractionDigits: decimals,
+        maximumFractionDigits: decimals
+    });
+}
+
+async function loadMarketData() {
+    try {
+        const response = await fetch("/api/market", { cache: "no-store" });
+
+        if (!response.ok) {
+            throw new Error(`Market HTTP ${response.status}`);
+        }
+
+        const data = await response.json();
+
+        const changeEl = document.getElementById("market-change");
+        const volumeEl = document.getElementById("market-volume");
+        const liquidityEl = document.getElementById("market-liquidity");
+        const marketCapEl = document.getElementById("market-cap");
+
+        const change = Number(data.price_change_24h || 0);
+
+        changeEl.textContent = `${change >= 0 ? "+" : ""}${change.toFixed(2)}% (24h)`;
+        changeEl.style.color = change >= 0 ? "#00e676" : "#ff5252";
+
+        volumeEl.textContent = formatMoney(data.volume_24h);
+        liquidityEl.textContent = formatMoney(data.liquidity);
+        marketCapEl.textContent = formatMoney(data.market_cap);
+
+    } catch (err) {
+        console.error("Market data error:", err);
+    }
+}
 
 async function loadStatus() {
     if (!statusRowEl) return;
@@ -157,6 +190,10 @@ async function loadStatus() {
         console.error(err);
     }
 }
-
+loadHistory(currentRange).catch(err => {
+    console.error(err);
+    latestDateEl.textContent = "Could not load chart data.";
+});
 loadStatus();
+loadMarketData();
 setInterval(loadStatus, 60000);

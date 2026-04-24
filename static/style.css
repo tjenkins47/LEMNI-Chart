@@ -120,3 +120,16 @@ h1 {
     color:#94a3b8;
     text-align:center;
 }
+
+.market-stats {
+    margin: 16px 0 22px;
+    color: var(--muted);
+    font-size: 0.95rem;
+    line-height: 1.45;
+}
+
+#market-change {
+    font-size: 1.15rem;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
