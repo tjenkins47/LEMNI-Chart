@@ -160,6 +160,20 @@ def fetch_current_price():
         print(f"Background fetch ERROR: {e}")
         raise
 
+def fetch_pool_data():
+    url = f"https://api.geckoterminal.com/api/v2/networks/{NETWORK}/pools/{POOL_ADDRESS}"
+    response = requests.get(url, timeout=20)
+    response.raise_for_status()
+
+    payload = response.json()
+    attrs = payload.get("data", {}).get("attributes", {})
+
+    return {
+        "price_change_24h": float(attrs.get("price_change_percentage", {}).get("h24") or 0),
+        "volume_24h": float(attrs.get("volume_usd", {}).get("h24") or 0),
+        "liquidity": float(attrs.get("reserve_in_usd") or 0),
+        "market_cap": float(attrs.get("market_cap_usd") or attrs.get("fdv_usd") or 0)
+    }
 
 def range_start_sql(range_key, end_timestamp):
     end_dt = datetime.fromisoformat(end_timestamp.replace("Z", "+00:00"))
@@ -218,6 +232,19 @@ def get_history(range_key):
 def index():
     return render_template("index.html")
 
+@app.get("/api/market")
+def api_market():
+    try:
+        data = fetch_pool_data()
+        return jsonify(data)
+    except Exception as e:
+        return jsonify({
+            "error": str(e),
+            "price_change_24h": None,
+            "volume_24h": None,
+            "liquidity": None,
+            "market_cap": None
+        }), 500
 
 @app.get("/api/history")
 def api_history():
