@@ -1,0 +1,41 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>LEMNI Price History</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+    <main class="shell">
+        <section class="card">
+            <div class="topline">LEMNI</div>
+            <h3>Price History</h3>
+            <div id="latestPrice" class="latest-price">$--</div>
+            <div id="latestDate" class="latest-date">Loading price history...</div>
+
+            <div class="range-row" aria-label="Chart range selector">
+                <button class="range-btn active" data-range="1D">1D</button>
+                <button class="range-btn" data-range="5D">5D</button>
+                <button class="range-btn" data-range="1M">1M</button>
+                <button class="range-btn" data-range="6M">6M</button>
+                <button class="range-btn" data-range="YTD">YTD</button>
+                <button class="range-btn" data-range="1Y">1Y</button>
+                <button class="range-btn" data-range="5Y">5Y</button>
+            </div>
+
+            <div class="chart-wrap">
+                <canvas id="priceChart"></canvas>
+            </div>
+
+            <div class="footer-row">
+                <span id="pointCount">-- points</span>
+                <button id="refreshBtn" class="refresh-btn">Refresh now</button>
+            </div>
+                    <div class="status-row" id="statusRow">Background updater: checking status...</div>
+        </section>
+    </main>
+    <script src="/static/app.js"></script>
+</body>
+</html>

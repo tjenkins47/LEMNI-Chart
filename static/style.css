@@ -1,0 +1,122 @@
+:root {
+    --bg: #0f172a;
+    --panel: #111c33;
+    --panel-2: #16213e;
+    --text: #f8fafc;
+    --muted: #94a3b8;
+    --gold: #fbbf24;
+    --green: #22c55e;
+    --line: rgba(255,255,255,0.12);
+}
+
+* { box-sizing: border-box; }
+
+body {
+    margin: 0;
+    min-height: 100vh;
+    font-family: Arial, Helvetica, sans-serif;
+    color: var(--text);
+    background:
+        radial-gradient(circle at top, rgba(251,191,36,0.10), transparent 30%),
+        var(--bg);
+}
+
+.shell {
+    width: min(980px, 100%);
+    margin: 0 auto;
+    padding: 28px 14px;
+}
+
+.card {
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02)), var(--panel);
+    border: 1px solid var(--line);
+    border-radius: 24px;
+    padding: 22px;
+    box-shadow: 0 20px 60px rgba(0,0,0,0.35);
+}
+
+.topline {
+    color: var(--gold);
+    letter-spacing: 4px;
+    font-weight: 600;
+    font-size: 28px;
+}
+
+h1 {
+    margin: 8px 0 12px;
+    font-size: clamp(30px, 5vw, 48px);
+}
+
+.latest-price {
+    font-size: 4rem; /* clamp(42px, 9vw, 76px); */
+    font-weight: 700;
+    line-height: 1;
+}
+
+.latest-date {
+    color: var(--muted);
+    margin-top: 8px;
+    font-size: 14px;
+}
+
+.range-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 24px 0 14px;
+}
+
+.range-btn,
+.refresh-btn {
+    appearance: none;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    padding: 10px 14px;
+    color: var(--text);
+    background: var(--panel-2);
+    font-weight: 700;
+    cursor: pointer;
+    touch-action: manipulation;
+}
+
+.range-btn.active {
+    background: var(--gold);
+    color: #0b132b;
+    border-color: var(--gold);
+}
+
+.chart-wrap {
+    height: min(58vh, 520px);
+    min-height: 300px;
+    padding: 8px 0;
+}
+
+.footer-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 16px;
+    align-items: center;
+    color: var(--muted);
+    font-size: 13px;
+    border-top: 1px solid var(--line);
+    padding-top: 16px;
+}
+
+.refresh-btn {
+    color: var(--gold);
+}
+
+@media (max-width: 560px) {
+    .card { padding: 18px 14px; border-radius: 18px; }
+    .range-row { justify-content: center; }
+    .range-btn { padding: 9px 12px; }
+    .chart-wrap { min-height: 260px; height: 46vh; }
+    .footer-row { flex-direction: column; align-items: stretch; text-align: center; }
+}
+
+.status-row{
+    margin-top:14px;
+    font-size:12px;
+    color:#94a3b8;
+    text-align:center;
+}
