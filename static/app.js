@@ -1,5 +1,5 @@
 let chart = null;
-let currentRange = "1D";
+let currentRange = "1M";
 
 const buttons = document.querySelectorAll(".range-btn");
 const latestPriceEl = document.getElementById("latestPrice");
