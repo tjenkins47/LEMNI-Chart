@@ -175,6 +175,31 @@ def fetch_pool_data():
         "market_cap": float(attrs.get("market_cap_usd") or attrs.get("fdv_usd") or 0)
     }
 
+
+def thin_points(points, max_points=20):
+    """
+    Reduces longer chart ranges to a readable number of points.
+    Always keeps the first and last points.
+    """
+    if len(points) <= max_points:
+        return points
+
+    step = (len(points) - 1) / (max_points - 1)
+    thinned = []
+    used_indexes = set()
+
+    for i in range(max_points):
+        index = round(i * step)
+
+        # Avoid rare duplicate indexes caused by rounding.
+        while index in used_indexes and index < len(points) - 1:
+            index += 1
+
+        used_indexes.add(index)
+        thinned.append(points[index])
+
+    return thinned
+
 def range_start_sql(range_key, end_timestamp):
     end_dt = datetime.fromisoformat(end_timestamp.replace("Z", "+00:00"))
     year_start = datetime(end_dt.year, 1, 1, tzinfo=timezone.utc).isoformat()
@@ -248,8 +273,21 @@ def api_market():
 
 @app.get("/api/history")
 def api_history():
-    range_key = request.args.get("range", "1M")
+    range_key = request.args.get("range", "1M").upper()
     points = get_history(range_key)
+
+     # Apply range-specific thinning
+    range_key_upper = (range_key or "1M").upper()
+
+    if range_key_upper in ["6M", "YTD", "1Y", "5Y"]:
+        points = thin_points(points, max_points=20)
+
+    elif range_key_upper == "1M":
+        points = thin_points(points, max_points=20)
+
+    elif range_key_upper in ["7D", "1D"]:
+        points = thin_points(points, max_points=8)  
+
     latest = points[-1] if points else None
     return jsonify({"range": range_key, "points": points, "latest": latest})
 
