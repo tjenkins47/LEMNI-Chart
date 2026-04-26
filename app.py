@@ -181,7 +181,7 @@ def range_start_sql(range_key, end_timestamp):
 
     mapping = {
         "1D": "datetime(?, '-1 day')",
-        "5D": "datetime(?, '-5 days')",
+        "7D": "datetime(?, '-7 days')",
         "1M": "datetime(?, '-1 month')",
         "6M": "datetime(?, '-6 months')",
         "1Y": "datetime(?, '-1 year')",
